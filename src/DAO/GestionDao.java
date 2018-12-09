@@ -57,24 +57,21 @@ public class GestionDao {
         st.close();
     }
     
-    public void modificarEspecialidadEntrenador(Entrenador e) throws SQLException, ExcepcionLigaPokemon{
-        if(!existeEntrenador(e)){
+    public void subirFuerzaPokemon(Pokemon p) throws SQLException, ExcepcionLigaPokemon{
+        
+        if(!existePokemon(p)){
             throw new ExcepcionLigaPokemon("El pokemon no existe");
         }
         
-        String update = "update Entrenador set especialidad = ? where nombre = ?";
+        String update = "Update Pokemon set fuerza=? where nombre=?";
         PreparedStatement ps = conexion.prepareStatement(update);
-        ps.setString(1, e.getEspecialidad());
-        ps.setString(2, e.getNombre());
+        ps.setDouble(1, p.getFuerza());
+        ps.setString(2, p.getNombre());
         ps.executeUpdate();
         ps.close();
- 
+
     }
-    
-    
-    
-    
-    
+  
     public boolean existePokemon(Pokemon p) throws SQLException, ExcepcionLigaPokemon{
         String select = "Select * from Pokemon where nombre = ?";
         
@@ -95,8 +92,41 @@ public class GestionDao {
     }
     
     
+    /*Buscar un pokemon por nombre*/
+    public Pokemon getPokemonByNombre(String nombre) throws SQLException, ExcepcionLigaPokemon{
+        Pokemon aux = new Pokemon(nombre);
+        
+        if(!existePokemon(aux)){
+            throw new ExcepcionLigaPokemon("El pokemon que busca no existe");
+        }
+        
+        String select = "Select * from Pokemon where nombre ='" + nombre + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        
+        Pokemon p = new Pokemon();
+        while(rs.next()){
+            /*nombre tipo fuerza entrenador*/
+            
+            p.setNombre(rs.getString("nombre"));
+            p.setTipo(rs.getString("tipo"));
+            p.setFuerza(rs.getDouble("fuerza"));
+            p.setEntrenador(getEntrenadorByNombre(rs.getString("entrenador"))); //Utilizamos el método del getNombreEntrenador que nos devuelve un entrenador completo
+        }
+        
+        rs.close();
+        st.close();
+        
+        return p;
+        
+    }
+    
+    
+    
+    
     /*MÉTODOS PARA ENTRENADOR*/
     /*Insert de un Entrenador*/
+    
     public void insertarEntrenador(Entrenador e) throws SQLException, ExcepcionLigaPokemon {
         if (existeEntrenador(e)) {
             throw new ExcepcionLigaPokemon("El entrenador ya existe");
@@ -143,12 +173,69 @@ public class GestionDao {
     }
 
     
-    public void seleccionarEntrenadorByNombre(Entrenador e){
+    public Entrenador getEntrenadorByNombre(String nombre) throws SQLException, ExcepcionLigaPokemon{
+        Entrenador aux = new Entrenador(nombre);
+        
+        if(!existeEntrenador(aux)){
+            throw new ExcepcionLigaPokemon("No existe un entrenador con ese nombre");
+        }
+        
+        String select = "Select * from Entrenador where nombre='" + nombre + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        
+        //Creamos un entrenador vacío para poder rellenarlo con lo que leemos con el resultSet
+        Entrenador e = new Entrenador();
+        
+        if(rs.next()){
+            
+          /*  nombre, telefono, sexo, edad, experiencia, especialidad */
+
+            e.setNombre(rs.getString("nombre"));
+            e.setTelefono(rs.getString("telefono"));
+            e.setSexo(rs.getString("sexo"));
+            e.setEdad(rs.getInt("edad"));
+            e.setExperiencia(rs.getInt("experiencia"));
+            e.setEspecialidad(rs.getString("especialidad"));
+            
+        }
+        
+        rs.close();
+        st.close();
+        return e;
         
     }
     
+    /*Modificar especialidad entrenador*/    
+    public void modificarEspecialidadEntrenador(Entrenador e) throws SQLException, ExcepcionLigaPokemon{
+        if(!existeEntrenador(e)){
+            throw new ExcepcionLigaPokemon("El pokemon no existe");
+        }
+        
+        String update = "update Entrenador set especialidad = ? where nombre = ?";
+        PreparedStatement ps = conexion.prepareStatement(update);
+        ps.setString(1, e.getEspecialidad());
+        ps.setString(2, e.getNombre());
+        ps.executeUpdate();
+        ps.close();
+ 
+    }
+
+    /*Borrar un entrenador*/
+    public void borrarEntrenador(Entrenador e) throws SQLException, ExcepcionLigaPokemon{
+        
+        if(!existeEntrenador(e)){
+            throw new ExcepcionLigaPokemon("El entrenador a borrar no existe");
+        }
+        
+        String select = "Delete from Entrenador where nombre= '" + e.getNombre() + "'";
+        Statement st = conexion.createStatement();
+        st.executeUpdate(select);
+        st.close();
+        
+    }
     
-    
+  
     
     
     

@@ -39,28 +39,56 @@ public class JDBCJava {
             System.out.println("Conexion establecida");
 
             //Testeando insertar un entrenador
+            System.out.println("|||||||||Testeando insertar un entrenador|||||||||");
             altaEntrenador(ligaDAO, ash);
-
+            altaEntrenador(ligaDAO, brock);
+            
+            System.out.println("|||||||||Testeando insertar un entrenador duplicado|||||||||");
             //Testeando insertar entrenador duplicado
             altaEntrenador(ligaDAO, ash);
 
+            System.out.println("|||||||||Testeando insertar un pokemon|||||||||");
             //Testeando insertar un pokemon
             altaPokemon(ligaDAO, pikachu);
+            altaPokemon(ligaDAO, onix);
             
+            System.out.println("|||||||||Testeando insertar un pokemon duplicado|||||||||");
             //Testeando insertar pokemon duplicado
             altaPokemon(ligaDAO, pikachu);
             
+            System.out.println("|||||||||Testeando insertar un pokemon con un entrenador que no existe|||||||||");
             //Testeando insertar un pokemon con un entrenador que no existe
             altaPokemon(ligaDAO, onix);
             
-            
+            System.out.println("|||||||||Testeando borrar un pokemon|||||||||");
             //Testeando borrar Pokemon
             borrarPokemon(ligaDAO, pikachu);
             
+            System.out.println("|||||||||Testeando modificar la especialidad de un entrenador|||||||||");
             //Testeando modificar la especialidad de un Entrenador
             ash.setEspecialidad("Agua");
+            modificarEntrenador(ligaDAO, ash);
             
+            System.out.println("|||||||||Testeando buscar un entrenador por el nombre|||||||||");
+            //Testeando buscar un entrenador por el nombre
+            entrenadorByNombre(ligaDAO, "Ash");
             
+            System.out.println("|||||||||Testeando mostrar la lista de todos los entrenadores|||||||||");
+            //Testeando mostrar la lista de todos los entrenadores
+            
+            System.out.println("|||||||||Testeando subir la fuerza a un pokemon|||||||||");
+            //Testeando subir la fuerza a un pokemon
+            Pokemon charmander = new Pokemon("Charmander", "Fuego", 22, ash);
+            altaPokemon(ligaDAO, charmander);
+            charmander.setFuerza(99.9);
+            subirFuerzaPokemon(ligaDAO, charmander);
+            
+            //Testeando buscar un pokemon por nombre
+            getPokemonByNombre(ligaDAO, "Charmander");
+            
+            System.out.println("|||||||||Testeando borrar un entrenador|||||||||");
+            //Testeando borrar un entrenador
+            borrarEntrenador(ligaDAO, ash);
             
             //Realizamos la desconexion
             System.out.println("Desconectando...");
@@ -114,6 +142,65 @@ public class JDBCJava {
             System.out.println(ex.getMessage());
         }
         
+    }
+    /*
+    Recuperamos un entrenador por su nombre y devolvemos el entrenador
+    También podríamos mostrar la información dentro del método.
+    */
+    public static Entrenador entrenadorByNombre(GestionDao ligaDAO, String nombre) throws SQLException{
+        
+        Entrenador e = new Entrenador();
+        
+        try{
+        
+            e = ligaDAO.getEntrenadorByNombre(nombre);
+            System.out.println(e);
+            
+        }catch(ExcepcionLigaPokemon ex){
+            System.out.println(ex.getMessage());
+        }
+        return e;
+
+    }
+    
+    /*Borrar un entrenador*/
+    public static void borrarEntrenador(GestionDao ligaDAO, Entrenador e) throws SQLException{
+        
+        try{
+            ligaDAO.borrarEntrenador(e);
+            System.out.println("Entrenador borrado correctamente");
+        }catch(ExcepcionLigaPokemon ex){
+            System.out.println(ex.getMessage());
+        }
+        
+    }
+    
+    /*Subir fuerza a un pokemon*/
+    public static void subirFuerzaPokemon(GestionDao ligaDAO, Pokemon p) throws SQLException{
+        
+        try{
+            
+            ligaDAO.subirFuerzaPokemon(p);
+            System.out.println("Fuerza subida satisfactoriamente");
+        }catch(ExcepcionLigaPokemon ex){
+            System.out.println(ex.getMessage());
+        }
+        
+    }
+    
+    /*Buscar un pokemon por nombre*/
+    public static Pokemon getPokemonByNombre(GestionDao ligaDAO, String nombre) throws SQLException{
+        Pokemon p = new Pokemon();
+        try{
+            
+            p = ligaDAO.getPokemonByNombre(nombre);
+            System.out.println(p);
+
+        }catch(ExcepcionLigaPokemon ex){
+            System.out.println(ex.getMessage());
+        }
+        
+        return p;
     }
     
     

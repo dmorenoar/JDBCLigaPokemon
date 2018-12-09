@@ -28,6 +28,10 @@ public class Entrenador {
         this.experiencia = experiencia;
         this.especialidad = especialidad;
     }
+    
+    public Entrenador(String nombre){
+        this.nombre = nombre;
+    }
 
     public String getNombre() {
         return nombre;
@@ -76,5 +80,11 @@ public class Entrenador {
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
+
+    @Override
+    public String toString() {
+        return "Entrenador{" + "nombre=" + nombre + ", telefono=" + telefono + ", sexo=" + sexo + ", edad=" + edad + ", experiencia=" + experiencia + ", especialidad=" + especialidad + '}';
+    }
+    
     
 }

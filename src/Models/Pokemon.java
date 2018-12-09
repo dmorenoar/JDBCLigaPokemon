@@ -24,6 +24,10 @@ public class Pokemon {
         this.fuerza = fuerza;
         this.entrenador = entrenador;
     }
+    
+    public Pokemon(String nombre){
+        this.nombre = nombre;
+    }
 
     public String getNombre() {
         return nombre;
@@ -57,4 +61,11 @@ public class Pokemon {
         this.entrenador = entrenador;
     }
 
+    @Override
+    public String toString() {
+        return "Pokemon{" + "nombre=" + nombre + ", tipo=" + tipo + ", fuerza=" + fuerza + ", entrenador=" + entrenador + '}';
+    }
+
+    
+    
 }
